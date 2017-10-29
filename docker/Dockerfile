@@ -3,7 +3,7 @@ FROM java:8-jre
 ARG GRAYLOG_VERSION
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/jre
-ENV GRAYLOG_SERVER_JAVA_OPTS "-Xms1g -Xmx2g -XX:NewRatio=1 -XX:MaxMetaspaceSize=256m -server -XX:+ResizeTLAB -XX:+UseConcMarkSweepGC -XX:+CMSConcurrentMTEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:-OmitStackTraceInFastThrow"
+ENV GRAYLOG_SERVER_JAVA_OPTS "-Xms1g -Xmx2g -XX:NewRatio=1 -XX:MaxMetaspaceSize=256m -Duser.timezone=GMT+08 -server -XX:+ResizeTLAB -XX:+UseConcMarkSweepGC -XX:+CMSConcurrentMTEnabled -XX:+CMSClassUnloadingEnabled -XX:+UseParNewGC -XX:-OmitStackTraceInFastThrow"
 ENV GOSU_VERSION 1.7
 
 RUN set -x \
@@ -32,6 +32,9 @@ RUN set -x \
   && rm /usr/share/graylog.tgz \
   && setcap 'cap_net_bind_service=+ep' $JAVA_HOME/bin/java
 
+RUN set -x \
+  && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime  \
+  && echo "Asia/Shanghai" > /etc/timezone
 
 ENV PATH /usr/share/graylog/bin:$PATH
 WORKDIR /usr/share/graylog
